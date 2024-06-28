@@ -1,0 +1,38 @@
+{
+  "name": "fullstack-streaming-service",
+  "version": "0.0.1",
+  "description": "P2P streaming service",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "node dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alex-Nio/streaming-service.git"
+  },
+  "keywords": [
+    "video",
+    "stream"
+  ],
+  "author": "Alex Nio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alex-Nio/streaming-service/issues"
+  },
+  "homepage": "https://github.com/Alex-Nio/streaming-service#readme",
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "dotenv": "^16.4.5",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "webtorrent": "1.8.30"
+  }
+}
