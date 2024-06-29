@@ -2,11 +2,24 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import * as path from 'path';
+import mongoose from 'mongoose';
 
 // routes
 import streamRouter from './modules/stream/stream.controller';
 import contentRouter from './modules/content/content.controller';
 import moviesRouter from './modules/movies/movies.controller';
+
+import 'dotenv/config';
+
+try {
+  console.log(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL).then(() => {
+    console.log('Database connection established');
+  });
+} catch (error) {
+  console.log('Connection to mongo failed: ', error);
+  throw error;
+}
 
 // middleware
 const app = express();

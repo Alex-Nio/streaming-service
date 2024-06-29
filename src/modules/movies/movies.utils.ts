@@ -3,7 +3,7 @@ import iconv from 'iconv-lite';
 import dotenv from 'dotenv';
 import * as cheerio from 'cheerio';
 import { parse } from 'qs';
-import { MAGNET_KEY, BASE_SEARCH_URL, BASE_FILM_URL, REPLACE_MAGNET_STRING } from './movies.consts';
+import { MAGNET_KEY, BASE_FILM_URL, REPLACE_MAGNET_STRING } from './movies.consts';
 
 dotenv.config();
 
@@ -50,7 +50,7 @@ const getMagnetKey = (node, page) => {
   return String(parsedMagnetLink[MAGNET_KEY]).replace(REPLACE_MAGNET_STRING, '');
 };
 
-const getTorrents = async publications => {
+export const getTorrents = async publications => {
   const cookies = process.env.RUTRACKER_COOKIES;
 
   const promises = publications.map(publication =>
@@ -74,7 +74,7 @@ const getTorrents = async publications => {
   return Promise.all(promises);
 };
 
-const getPublications = data => {
+export const getPublications = data => {
   const decodedData = iconv.decode(Buffer.from(data), 'win1251');
   const $ = cheerio.load(decodedData);
   const nodes = $('#tor-tbl tr').toArray();
@@ -100,16 +100,4 @@ const getPublications = data => {
       peers: peers || 'Не найдено'
     };
   });
-};
-
-export const doSearch = async query => {
-  const cookies = process.env.RUTRACKER_COOKIES;
-  const response = await axios.get(`${BASE_SEARCH_URL}${query}`, {
-    responseType: 'arraybuffer',
-    headers: { Cookie: cookies },
-    withCredentials: true
-  });
-
-  const publications = getPublications(response.data);
-  return getTorrents(publications);
 };
