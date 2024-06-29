@@ -1,5 +1,7 @@
 import { Router, Response, Request, NextFunction } from 'express';
 import WebTorrent, { Torrent, TorrentFile } from 'webtorrent';
+// Interfaces
+import { ErrorWithStatus, StreamRequest } from './stream.interfaces';
 
 const router = Router();
 const client = new WebTorrent();
@@ -55,19 +57,6 @@ router.get('/stats', (req: Request, res: Response) => {
 });
 
 // stream
-interface StreamRequest extends Request {
-  params: {
-    magnetLink: string;
-    fileName: string;
-  };
-  headers: {
-    range: string;
-  };
-}
-
-interface ErrorWithStatus extends Error {
-  status: number;
-}
 router.get('/:magnetLink/:fileName', (req: StreamRequest, res: Response, next: NextFunction) => {
   const {
     params: { magnetLink, fileName },
