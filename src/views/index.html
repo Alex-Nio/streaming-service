@@ -10,20 +10,63 @@
 
   <title>Video Player</title>
 </head>
+
 <style>
   video {
     width: 100%;
+  }
+
+  ul {
+    text-decoration: none;
+  }
+
+  li {
+    padding: 12px;
+    border: 2px solid teal;
+    margin: 20px 0;
+    max-width: 420px;
+  }
+
+  span {
+    display: flex;
+    gap: 12px;
+    padding: 8px;
   }
 </style>
 
 <body>
   <div id="app">
     <video :src="videoUrl" controls autoplay></video>
+    <input v-model="searchTerm" placeholder="Поиск фильма" type="search" />
+    <button @click="findMovie">Найти</button>
     <hr />
     <ul>
       <li v-for="file in files" :key="file.magnet">
-        {{ file.title }}
-        <button @click="play(file)">Play</button>
+        <span class="film-title">
+          <strong>Название:</strong>
+          {{ file.title }}
+        </span>
+        <!-- <span class="film-category">
+          <strong>Категория:</strong>
+          {{ file.category }}
+        </span>
+        <span class="film-size">
+          <strong>Размер файла:</strong>
+          {{ file.size.replace('↓', '') }}
+        </span>
+        <span class="film-quality">
+          <strong>Качество видео:</strong>
+          {{ file.quality }}
+        </span>
+        <span class="film-format">
+          <strong>Формат видео:</strong>
+          {{ file.format }}
+        </span>
+        <span class="film-audio">
+          <strong>Формат аудио:</strong>
+          {{ file.audio }}
+        </span> -->
+        <button @click="play(file)">Воспроизвести</button>
       </li>
     </ul>
   </div>
@@ -34,29 +77,29 @@
   createApp({
     data() {
       return {
+        searchTerm: '',
         activeVideo: {},
-        files: [
-          {
-            magnet: '1A8EF810EAC6CF738FA242FF1B3531BBD3460919',
-            title: 'Bad.Boys.Ride.or.Die.2024.TS.Rus.Dub.2.0.mkv',
-          }
-        ]
+        files: []
       }
     },
     computed: {
       videoUrl: ({ activeVideo }) => {
-        return activeVideo.fileName ? `/stream/${activeVideo.magnet}/${activeVideo.fileName}` : ''
+        return activeVideo.fileName ? `/stream/${activeVideo.magnetLink}/${activeVideo.fileName}` : ''
       }
     },
     methods: {
       async play(file) {
-        const { data } = await axios.get(`/stream/add/${file.magnet}`)
+        const { data } = await axios.get(`/stream/add/${file.magnetLink}`)
 
         this.activeVideo = {
-          magnet: file.magnet,
+          magnetLink: file.magnetLink,
           fileName: data[0].name
         }
       },
+      async findMovie() {
+        const response = await axios.get(`/movies/search?nm=${this.searchTerm}`);
+        this.files = response.data;
+      }
     }
   }).mount('#app')
 </script>

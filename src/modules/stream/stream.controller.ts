@@ -1,14 +1,14 @@
-import { Router, Response, Request, NextFunction } from "express";
+import { Router, Response, Request, NextFunction } from 'express';
 import WebTorrent, { Torrent, TorrentFile } from 'webtorrent';
 
 const router = Router();
 const client = new WebTorrent();
 
 let state = {
-  process: 0,
+  progress: 0,
   downloadSpeed: 0,
   ratio: 0
-}
+};
 
 let error;
 
@@ -20,22 +20,25 @@ client.on('error', (err: Error) => {
 client.on('torrent', () => {
   console.log(client.progress);
   state = {
-    process: Math.round(client.progress * 100 * 100) / 100,
+    progress: Math.round(client.progress * 100 * 100) / 100,
     downloadSpeed: client.downloadSpeed,
     ratio: client.ratio
-  }
+  };
 });
 
-router.get('/add/:magnet', (req: Request, res: Response) => {
-  const magnet = req.params.magnet;
+router.get('/add/:magnetLink', (req: Request, res: Response) => {
+  const magnetLink = req.params.magnetLink;
 
-  client.add(magnet, (torrent) => {
-    const files = torrent.files.map(data => (
-      {
-        name: data.name,
-        length: data.length
-      }
-    ));
+  client.add(magnetLink, torrent => {
+    const files = torrent.files.map(data => ({
+      name: data.name,
+      length: data.length
+    }));
+
+    // Добавляем путь скачивания торрента
+    const downloadPath = torrent.path;
+
+    console.log('DOWNLOAD PATH: ', downloadPath);
 
     res.status(200).send(files);
   });
@@ -43,105 +46,78 @@ router.get('/add/:magnet', (req: Request, res: Response) => {
 
 router.get('/stats', (req: Request, res: Response) => {
   state = {
-    process: Math.round(client.progress * 100 * 100) / 100,
+    progress: Math.round(client.progress * 100 * 100) / 100,
     downloadSpeed: client.downloadSpeed,
     ratio: client.ratio
-  }
+  };
 
-  res.status(200).send(state)
+  res.status(200).send(state);
 });
 
 // stream
 interface StreamRequest extends Request {
   params: {
-    magnet: string,
-    fileName: string
-  }
+    magnetLink: string;
+    fileName: string;
+  };
   headers: {
-    range: string
-  }
+    range: string;
+  };
 }
 
 interface ErrorWithStatus extends Error {
-  status: number
+  status: number;
 }
+router.get('/:magnetLink/:fileName', (req: StreamRequest, res: Response, next: NextFunction) => {
+  const {
+    params: { magnetLink, fileName },
+    headers: { range }
+  } = req;
 
-router.get(
-  '/:magnet/:filename',
-  (req: StreamRequest, res: Response, next: NextFunction) => {
-    const {
-      params: { magnet, fileName },
-      headers: { range }
-    } = req;
+  if (!range) {
+    const err = new Error('Range is not defined, please make request from HTML5 Player') as ErrorWithStatus;
+    err.status = 416;
+    return next(err);
+  }
 
-    if (!range) {
-      const err = new Error('Range not defined, please make request from HTML5 player') as ErrorWithStatus;
-      err.status = 416;
-      return next(err);
+  const torrentFile = client.get(magnetLink) as Torrent;
+  let file = <TorrentFile>{};
+
+  for (let i = 0; i < torrentFile.files.length; i++) {
+    const currentTorrentPiece = torrentFile.files[i];
+    if (currentTorrentPiece.name === fileName) {
+      file = currentTorrentPiece;
     }
+  }
+  const fileSize = file.length;
+  const [startParsed, endParsed] = range.replace(/bytes=/, '').split('-');
 
-    const torrentFile = client.get(magnet) as Torrent;
+  const start = Number(startParsed);
+  const end = endParsed ? Number(endParsed) : fileSize - 1;
 
-    if (!torrentFile) {
-      const err = new Error('Torrent not found') as ErrorWithStatus;
-      err.status = 404;
-      return next(err);
-    }
+  const chunkSize = end - start + 1;
 
-    let file: TorrentFile | undefined = undefined;
+  const headers = {
+    'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+    'Accept-Ranges': 'bytes',
+    'Content-Length': chunkSize,
+    'Content-Type': 'video/mp4'
+  };
 
-    for (let i = 0; i < torrentFile.files.length; i++) {
-      const currentTorrentPiece = torrentFile.files[i];
+  res.writeHead(206, headers);
 
-      if (currentTorrentPiece.name === fileName) {
-        file = currentTorrentPiece;
-        break;
-      }
-    }
+  const streamPositions = {
+    start,
+    end
+  };
 
-    if (!file) {
-      const err = new Error('File not found in torrent') as ErrorWithStatus;
-      err.status = 404;
-      return next(err);
-    }
+  const stream = file.createReadStream(streamPositions);
 
-    const fileSize = file.length;
+  stream.pipe(res);
 
-    console.log('RANGE:', range);
-    const [startParsed, endParsed] = range.replace(/bytes=/, '').split('-')
-
-    const start = Number(startParsed);
-    const end = endParsed ? Number(endParsed) : fileSize - 1;
-
-    console.log('FileSIZE:', fileSize);
-    console.log('END:', end);
-
-    const chunkSize = end - start + 1;
-
-    console.log(`${start}-${end}/${fileSize}`);
-
-    const headers = {
-      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': chunkSize,
-      'Content-Type': 'video/mp4'
-    }
-
-    res.writeHead(206, headers);
-
-    const streamPositions = {
-      start,
-      end
-    }
-
-    const stream = file.createReadStream(streamPositions);
-
-    stream.pipe(res);
-
-    stream.on('error', (err) => {
-      return next(err);
-    });
+  stream.on('error', err => {
+    return next(err);
+  });
 });
-
 
 export default router;
