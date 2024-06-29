@@ -17,6 +17,7 @@ dotenv.config();
 
 const router = Router();
 
+// const GLOBAL_SEARCH_URL = 'https://rutracker.org/forum/tracker.php?nm=';
 const BASE_SEARCH_URL = 'https://rutracker.org/forum/tracker.php?f=252&nm=';
 const BASE_FILM_URL = 'https://rutracker.org/forum';
 const MAGNET_KEY = 'magnet:?xt';
@@ -55,7 +56,7 @@ router.get('/search', async (req: SearchRequest, res) => {
     // TODO: refactoring this
     let posts = [];
 
-    data.map((item, index) => {
+    data.map(item => {
       const [categoryTag, pageTag, authorTag, sizeTag] = $(item).find('a').toArray();
 
       const categoryName = $(categoryTag).parent().children().text();
@@ -63,14 +64,18 @@ router.get('/search', async (req: SearchRequest, res) => {
       const title = $(pageTag).text();
       const author = $(authorTag).text();
       const size = $(sizeTag).text();
+      const seeds = $(item).find('.seedmed').text();
+      const peers = $(item).find('.leechmed').text();
 
       posts.push({
-        title: title,
-        category: categoryName,
+        title: title ? title : 'Не найдено',
+        category: categoryName ? categoryName : 'Не найдено',
         page: pageLink,
-        author: author,
-        size: size,
-        torrent: `${BASE_FILM_URL}/${pageLink}`
+        author: author ? author : 'Не найдено',
+        size: size ? size : 'Не найдено',
+        torrent: `${BASE_FILM_URL}/${pageLink}`,
+        seeds: seeds ? seeds : 'Не найдено',
+        peers: peers ? peers : 'Не найдено'
       });
     });
 
@@ -149,6 +154,10 @@ router.get('/search', async (req: SearchRequest, res) => {
           post.format = description2.split('\n')[0].replace(/^:\s*/, '').trim();
           post.audio = description3.split('\n')[0].replace(/^:\s*/, '').trim();
         } else {
+          post.quality = 'Не найдено';
+          post.format = 'Не найдено';
+          post.audio = 'Не найдено';
+
           console.warn(`Quality not found for page: ${post.page}`);
         }
       } catch (error) {

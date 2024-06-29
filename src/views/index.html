@@ -37,16 +37,21 @@
 <body>
   <div id="app">
     <video :src="videoUrl" controls autoplay></video>
+    <hr />
     <input v-model="searchTerm" placeholder="Поиск фильма" type="search" />
     <button @click="findMovie">Найти</button>
     <hr />
     <ul>
       <li v-for="file in files" :key="file.magnet">
+        <span class="film-author">
+          <strong>Автор:</strong>
+          {{ file.author }}
+        </span>
         <span class="film-title">
           <strong>Название:</strong>
           {{ file.title }}
         </span>
-        <!-- <span class="film-category">
+        <span class="film-category">
           <strong>Категория:</strong>
           {{ file.category }}
         </span>
@@ -65,7 +70,15 @@
         <span class="film-audio">
           <strong>Формат аудио:</strong>
           {{ file.audio }}
-        </span> -->
+        </span>
+        <span class="film-seeds">
+          <strong>Сиды:</strong>
+          {{ file.seeds }}
+        </span>
+        <span class="film-peers">
+          <strong>Пиры:</strong>
+          {{ file.peers }}
+        </span>
         <button @click="play(file)">Воспроизвести</button>
       </li>
     </ul>
