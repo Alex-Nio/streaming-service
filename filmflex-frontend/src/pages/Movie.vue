@@ -3,10 +3,25 @@
   import axios from "axios";
   import Section from "@/components/layout/Section.vue";
 
-  const searchTerm = ref("");
-  const activeVideo = ref({});
-  const files = ref([]);
+  const searchQuery = ref("");
+  const activeVideo = ref<Partial<VideoFile>>({});
+  const files = ref<Partial<VideoFile>[]>([]);
   const HOST = "http://localhost:8080";
+
+  interface VideoFile {
+    fileName: string;
+    magnetLink: string;
+    magnet: string;
+    author: string;
+    title: string;
+    category: string;
+    size: string;
+    quality: string;
+    format: string;
+    audio: string;
+    seeds: string;
+    peers: string;
+  }
 
   const getMyMovies = async () => {
     const response = await axios.get(`${HOST}/movies`);
@@ -14,11 +29,11 @@
   };
 
   const findMovie = async () => {
-    const response = await axios.get(`${HOST}/movies/search?nm=${searchTerm.value}`);
+    const response = await axios.get(`${HOST}/movies/search?nm=${searchQuery.value}`);
     files.value = response.data;
   };
 
-  const play = async (file) => {
+  const play = async (file: Partial<VideoFile>) => {
     const { data } = await axios.get(`${HOST}/stream/add/${file.magnetLink}`);
     activeVideo.value = {
       magnetLink: file.magnetLink,
@@ -42,7 +57,7 @@
     <div>
       <video :src="videoUrl" controls autoplay></video>
       <hr />
-      <input v-model="searchTerm" placeholder="Поиск фильма" type="search" />
+      <input v-model="searchQuery" placeholder="Поиск фильма" type="search" />
       <button @click="findMovie">Найти</button>
       <hr />
       <ul>

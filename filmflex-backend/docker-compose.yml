@@ -3,7 +3,7 @@ version: '3.6'
 services:
   mongodb:
     image: mongo
-    container_name: 'streaming-db'
+    container_name: 'filmflex-db'
     volumes:
       - "./_databases:/data/db"
     ports:

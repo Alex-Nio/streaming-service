@@ -1,15 +1,14 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import path from 'path';
+import { resolve } from 'path';
+import svgLoader from 'vite-svg-loader';
 
 export default defineConfig({
-  plugins: [vue()],
-  build: {
-    outDir: 'dist'
+  resolve: {
+    alias: [{ find: '@', replacement: resolve(__dirname, './src') }]
   },
-  publicDir: 'public',
-  define: {
-    'process.env': {}
+  build: {
+    chunkSizeWarningLimit: 600
   },
   css: {
     preprocessorOptions: {
@@ -18,9 +17,8 @@ export default defineConfig({
       }
     }
   },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src')
-    }
-  }
+  plugins: [
+    vue(),
+    svgLoader()
+  ]
 });

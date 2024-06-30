@@ -1,5 +1,5 @@
 {
-  "name": "streambox-frontend",
+  "name": "filmflex-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,15 +9,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/node": "^20.14.9",
     "axios": "^1.7.2",
+    "path": "^0.12.7",
     "sass": "^1.77.6",
+    "vite-plugin-pwa": "^0.20.0",
+    "vite-svg-loader": "^5.1.0",
     "vue": "^3.4.29",
-    "vue-router": "^4.4.0"
+    "vue-router": "^4.4.0",
+    "vue-tsc": "^2.0.24"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
     "typescript": "^5.2.2",
-    "vite": "^5.3.1",
-    "vue-tsc": "^2.0.21"
+    "vite": "^5.3.1"
   }
 }
