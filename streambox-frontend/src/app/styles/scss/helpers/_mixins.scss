@@ -1,0 +1,215 @@
+// *================================================================
+//? Absolute-elements centered
+// *================================================================
+
+//? after
+@mixin absolute-centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+// *================================================================
+//? Pseudo-elements centered
+// *================================================================
+
+//? after
+@mixin after-centered {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+//? before
+@mixin before-centered {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+// *================================================================
+//? Transitions
+// *================================================================
+
+@mixin defaultTransition {
+  transition: all 0.3s linear;
+}
+
+@mixin fastTransition {
+  transition: all 0.1s ease-in-out;
+}
+
+@mixin slowTransition {
+  transition: all 0.5s linear;
+}
+
+// *================================================================
+//? Hovers
+// *================================================================
+
+// @mixin base-hover($color) {
+//   &:hover {
+//     background-color: darken($color: $color, $amount: 8%);
+//     @include defaultTransition;
+//   }
+// }
+
+//? Mobile disabled hover
+@mixin hover {
+  @media (any-hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+// *================================================================
+//? Media queries
+// *================================================================
+
+//! 1920+ (*Временно не используется)
+@mixin media-extra-large {
+  @media screen and (min-width: $xl) {
+    @content;
+  }
+}
+
+// 1659-1200
+@mixin media-large {
+  @media screen and (max-width: $lg) {
+    @content;
+  }
+}
+
+// 1199-992
+@mixin media-medium {
+  @media screen and (max-width: $md) {
+    @content;
+  }
+}
+
+// 991-768
+@mixin media-small {
+  @media screen and (max-width: $sm) {
+    @content;
+  }
+}
+
+// 767-0 100%
+@mixin media-extra-small {
+  @media screen and (max-width: $xs) {
+    @content;
+  }
+}
+
+// min width
+@mixin media-min {
+  @media screen and (max-width: $xxs) {
+    @content;
+  }
+}
+
+// *================================================================
+//? icons
+// *================================================================
+
+@mixin icon-big {
+  display: flex;
+  font-size: $icon-fz32;
+  max-height: $icon-fz32;
+  max-width: $icon-fz32;
+}
+
+@mixin icon-medium {
+  display: flex;
+  font-size: $icon-fz24;
+  max-height: $icon-fz24;
+  max-width: $icon-fz24;
+}
+
+@mixin icon-small {
+  display: flex;
+  font-size: $icon-fz20;
+  max-height: $icon-fz20;
+  max-width: $icon-fz20;
+}
+
+@mixin icon-extra-small {
+  display: flex;
+  font-size: $icon-fz16;
+  max-height: $icon-fz16;
+  max-width: $icon-fz16;
+}
+
+// *================================================================
+//? Сброс margin первого и последнего
+// *================================================================
+
+@mixin reset-horizontal-margin {
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+@mixin reset-vertical-margin {
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// *================================================================
+//? Адаптивное свойство
+// *================================================================
+
+@mixin adaptive-value($property, $startSize, $minSize, $type) {
+  $addSize: $startSize - $minSize;
+
+  @if $type == 1 {
+    // Только если меньше контейнера
+    #{$property}: $startSize + px;
+
+    @media (max-width: #{$container-max-width + px}) {
+      #{$property}: calc(
+        #{$minSize + px} + #{$addSize} *
+          ((100vw - 320px) / #{$container-max-width - 320})
+      );
+    }
+  } @else if $type == 2 {
+    // Только если больше контейнера
+    #{$property}: $startSize + px;
+
+    @media (min-width: #{$container-max-width + px}) {
+      #{$property}: calc(
+        #{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$max-width - 320})
+      );
+    }
+  } @else {
+    // Всегда
+    #{$property}: calc(
+      #{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$max-width - 320})
+    );
+  }
+}
+
+// *================================================================
+//? Другое
+// *================================================================

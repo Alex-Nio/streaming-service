@@ -1,0 +1,242 @@
+// *================================================================
+//? Шрифты и заголовки
+// *================================================================
+
+//? Headings
+@mixin heading-h1 {
+  font-family: $ff_NSsb;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+@mixin heading-h2 {
+  font-family: $ff_NSsb;
+  font-size: 36px;
+  line-height: 120%;
+}
+
+@mixin heading-h3 {
+  font-family: $ff_NSsb;
+  font-size: 32px;
+  line-height: 124%;
+}
+
+@mixin heading-h4 {
+  font-family: $ff_NSsb;
+  font-size: 24px;
+  line-height: 132%;
+}
+
+@mixin heading-h5 {
+  font-family: $ff_NSsb;
+  font-size: 20px;
+  line-height: 140%;
+}
+
+@mixin heading-h6 {
+  font-family: $ff_NSsb;
+  font-size: 18px;
+  line-height: 142%;
+}
+
+//? Font styles
+
+// DaysOne-upper
+@mixin do-upper80 {
+  font-family: $ff_Dr;
+  font-size: 80px;
+  line-height: 124%;
+  text-transform: uppercase;
+}
+
+@mixin do-upper58 {
+  font-family: $ff_Dr;
+  font-size: 58px;
+  line-height: 124%;
+  text-transform: uppercase;
+}
+
+@mixin do-upper48 {
+  font-family: $ff_Dr;
+  font-size: 48px;
+  line-height: 128%;
+  text-transform: uppercase;
+}
+
+@mixin do-upper40 {
+  font-family: $ff_Dr;
+  font-size: 40px;
+  line-height: 128%;
+  text-transform: uppercase;
+}
+
+@mixin do-upper32 {
+  font-family: $ff_Dr;
+  font-size: 32px;
+  line-height: 130%;
+  text-transform: uppercase;
+}
+
+@mixin do-upper26 {
+  font-family: $ff_Dr;
+  font-size: 26px;
+  line-height: 130%;
+  text-transform: uppercase;
+}
+
+@mixin do-upper24 {
+  font-family: $ff_Dr;
+  font-size: 24px;
+  line-height: 130%;
+  text-transform: uppercase;
+}
+
+@mixin do-upper20 {
+  font-family: $ff_Dr;
+  font-size: 20px;
+  line-height: 130%;
+  text-transform: uppercase;
+}
+
+@mixin do-upper18 {
+  font-family: $ff_Dr;
+  font-size: 18px;
+  line-height: 130%;
+  text-transform: uppercase;
+}
+
+// do-lower
+@mixin do-lower26 {
+  font-family: $ff_Dr;
+  font-size: 26px;
+  line-height: 130%;
+}
+
+@mixin do-lower24 {
+  font-family: $ff_Dr;
+  font-size: 24px;
+  line-height: 130%;
+}
+
+@mixin do-lower20 {
+  font-family: $ff_Dr;
+  font-size: 20px;
+  line-height: 130%;
+}
+
+@mixin do-lower18 {
+  font-family: $ff_Dr;
+  font-size: 18px;
+  line-height: 130%;
+}
+
+// Text nunito-r
+@mixin nunito-r24 {
+  font-family: $ff_NSr;
+  font-size: 24px;
+  line-height: 140%;
+}
+
+@mixin nunito-r20 {
+  font-family: $ff_NSr;
+  font-size: 20px;
+  line-height: 140%;
+}
+
+@mixin nunito-r18 {
+  font-family: $ff_NSr;
+  font-size: 18px;
+  line-height: 132%;
+}
+
+@mixin nunito-r16 {
+  font-family: $ff_NSr;
+  font-size: 16px;
+  line-height: 136%;
+}
+
+@mixin nunito-r14 {
+  font-family: $ff_NSr;
+  font-size: 14px;
+  line-height: 140%;
+}
+
+@mixin nunito-r12 {
+  font-family: $ff_NSr;
+  font-size: 12px;
+  line-height: 132%;
+}
+
+// Text nunito-sb
+@mixin nunito-sb24 {
+  font-family: $ff_NSsb;
+  font-size: 24px;
+  line-height: 140%;
+}
+
+@mixin nunito-sb20 {
+  font-family: $ff_NSsb;
+  font-size: 20px;
+  line-height: 140%;
+}
+
+@mixin nunito-sb18 {
+  font-family: $ff_NSsb;
+  font-size: 18px;
+  line-height: 132%;
+}
+
+@mixin nunito-sb16 {
+  font-family: $ff_NSsb;
+  font-size: 16px;
+  line-height: 136%;
+}
+
+@mixin nunito-sb14 {
+  font-family: $ff_NSsb;
+  font-size: 14px;
+  line-height: 140%;
+}
+
+@mixin nunito-sb12 {
+  font-family: $ff_NSsb;
+  font-size: 12px;
+  line-height: 132%;
+}
+
+// Text nunito-b
+@mixin nunito-b24 {
+  font-family: $ff_NSb;
+  font-size: 24px;
+  line-height: 140%;
+}
+
+@mixin nunito-b20 {
+  font-family: $ff_NSb;
+  font-size: 20px;
+  line-height: 140%;
+}
+
+@mixin nunito-b18 {
+  font-family: $ff_NSb;
+  font-size: 18px;
+  line-height: 132%;
+}
+
+@mixin nunito-b16 {
+  font-family: $ff_NSb;
+  font-size: 16px;
+  line-height: 136%;
+}
+
+@mixin nunito-b14 {
+  font-family: $ff_NSb;
+  font-size: 14px;
+  line-height: 140%;
+}
+
+@mixin nunito-b12 {
+  font-family: $ff_NSb;
+  font-size: 12px;
+  line-height: 132%;
+}

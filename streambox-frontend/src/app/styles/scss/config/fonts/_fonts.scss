@@ -1,0 +1,21 @@
+//? Миксин для подключения шрифтов
+//* Подробнее: https://developer.mozilla.org/ru/docs/Web/CSS/font-family
+
+$font-path: './public/assets/fonts/main' !default;
+
+@mixin font-face($font-family, $weight, $style) {
+  @font-face {
+    font-family: '#{$font-family}';
+    src: url('#{$font-path}/#{$font-family}.woff') format('woff'),
+      url('#{$font-path}/#{$font-family}.woff2') format('woff2');
+    font-weight: #{$weight};
+    font-display: swap;
+    font-style: $style;
+  }
+}
+
+//? Подключение шрифтов
+@include font-face('NunitoSans-Regular', 400, normal);
+@include font-face('NunitoSans-SemiBold', 600, normal);
+@include font-face('NunitoSans-Bold', 700, normal);
+@include font-face('DaysOne-Regular', 400, normal);
