@@ -1,3 +1,5 @@
+import { Belongstocollection, Productioncompany, Productioncountry, Spokenlanguage } from './movies.interfaces';
+
 export interface Movie {
   title: string;
   original_title: string;
