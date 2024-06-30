@@ -1,34 +1,22 @@
-// Packages
-import axios from 'axios';
-import { stringify } from 'querystring';
-// Consts
-import { IMDB_SEARCH_URL } from '../movies.consts';
 // Cfg
 import 'dotenv/config';
+// Interfaces
+import { Movie, IMDBMovie } from '../movies.interfaces';
+// Helpers
+import { convertMovie, IMDBRequests } from '../helpers/imdb.helper';
 
-export const doSearchInImdb = async query => {
-  const queryParams = stringify({
-    query,
-    language: 'ru',
-    api_key: process.env.IMDB_API_KEY
-  });
+const { searchMovie, getMovie } = IMDBRequests();
 
+export const doSearchInImdb = async (query: string): Promise<Partial<IMDBMovie>> => {
   const {
     data: { results }
-  } = await axios.get(`${IMDB_SEARCH_URL}/search/movie?${queryParams}`);
-
+  } = await searchMovie(query);
   const [movie] = results;
 
   return movie;
 };
 
-export const getMovieFromImdb = async (imdbId: string) => {
-  const queryParams = stringify({
-    language: 'ru',
-    api_key: process.env.IMDB_API_KEY
-  });
-
-  const result = await axios.get(`${IMDB_SEARCH_URL}/movie/${imdbId}?${queryParams}`);
-
-  return result.data;
+export const getMovieFromImdb = async (imdbId: string): Promise<Partial<Movie>> => {
+  const { data } = await getMovie(imdbId);
+  return convertMovie(data);
 };

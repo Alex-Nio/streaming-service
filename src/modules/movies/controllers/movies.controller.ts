@@ -39,6 +39,8 @@ router.get('/imdb-search', async ({ query: { searchTerm } }: SearchRequest, res)
 
 router.get('/imdb/:imdbId', async ({ params: { imdbId } }: GetMovieFromImdbRequest, res) => {
   try {
+    console.log(imdbId);
+
     const results = await imdbService.getMovieFromImdb(imdbId);
 
     res.status(200).send(results);
