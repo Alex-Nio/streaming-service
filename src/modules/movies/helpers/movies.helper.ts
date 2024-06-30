@@ -3,7 +3,7 @@ import iconv from 'iconv-lite';
 import dotenv from 'dotenv';
 import * as cheerio from 'cheerio';
 import { parse } from 'qs';
-import { MAGNET_KEY, BASE_FILM_URL, REPLACE_MAGNET_STRING } from './movies.consts';
+import { MAGNET_KEY, BASE_FILM_URL, REPLACE_MAGNET_STRING } from '../movies.consts';
 
 dotenv.config();
 

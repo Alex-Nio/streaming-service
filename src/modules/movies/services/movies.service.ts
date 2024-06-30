@@ -1,8 +1,13 @@
+// Packages
 import axios from 'axios';
-import MovieEntity from './movies.model';
-import { Movie } from './movies.interfaces';
-import { BASE_SEARCH_URL } from './movies.consts';
-import { getPublications, getTorrents } from './movies.utils';
+// Consts
+import { BASE_SEARCH_URL } from '../movies.consts';
+// Utils
+import { getPublications, getTorrents } from '../helpers/movies.helper';
+// Interfaces
+import { Movie } from '../movies.interfaces';
+// Models
+import MovieEntity from '../movies.model';
 
 export const doSearch = async query => {
   const cookies = process.env.RUTRACKER_COOKIES;
@@ -16,6 +21,7 @@ export const doSearch = async query => {
   return getTorrents(publications);
 };
 
+// CRUD
 export const create = async (input: Movie) => {
   const item = new MovieEntity(input);
   await item.save();

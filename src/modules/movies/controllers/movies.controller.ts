@@ -2,10 +2,11 @@
 import { Router } from 'express';
 
 // Service
-import * as movieService from './movies.service';
+import * as movieService from '../services/movies.service';
+import * as imdbService from '../services/imdb.service';
 
 // Interfaces
-import { CreateMovieRequest, SearchRequest } from './movies.interfaces';
+import { CreateMovieRequest, SearchRequest, GetMovieFromImdbRequest } from '../movies.interfaces';
 
 const router = Router();
 
@@ -19,6 +20,26 @@ router.get('/search', async (req: SearchRequest, res) => {
 
     // Сортировка по убыванию сидов
     if (results.length > 0) results.sort((a, b) => b.seeds - a.seeds);
+
+    res.status(200).send(results);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
+router.get('/imdb-search', async ({ query: { searchTerm } }: SearchRequest, res) => {
+  try {
+    const results = await imdbService.doSearchInImdb(searchTerm);
+
+    res.status(200).send(results);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
+router.get('/imdb/:imdbId', async ({ params: { imdbId } }: GetMovieFromImdbRequest, res) => {
+  try {
+    const results = await imdbService.getMovieFromImdb(imdbId);
 
     res.status(200).send(results);
   } catch (err) {

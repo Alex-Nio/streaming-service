@@ -3,6 +3,13 @@ import { Request } from 'express';
 export interface SearchRequest extends Request {
   query: {
     nm: string;
+    searchTerm: string;
+  };
+}
+
+export interface GetMovieFromImdbRequest extends Request {
+  params: {
+    imdbId: string;
   };
 }
 
@@ -32,6 +39,9 @@ export interface GetMovieRequest extends Request {
 export interface Movie {
   title: string;
   plot: string;
+  magnet: string;
+  fileName: string;
+  sourceUrl: string;
   year: string;
   director: string;
   actors: string[];

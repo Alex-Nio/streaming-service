@@ -58,10 +58,10 @@
             <strong>Категория:</strong>
             {{ file.category }}
           </span>
-          <span class="film-size">
+          <!-- <span class="film-size">
             <strong>Размер файла:</strong>
             {{ file.size.replace('↓', '') }}
-          </span>
+          </span> -->
           <span class="film-quality">
             <strong>Качество видео:</strong>
             {{ file.quality }}
@@ -102,12 +102,23 @@
         files: []
       }
     },
+    async mounted() {
+      this.getMyMovies();
+    },
     computed: {
       videoUrl: ({ activeVideo }) => {
         return activeVideo.fileName ? `/stream/${activeVideo.magnetLink}/${activeVideo.fileName}` : ''
       }
     },
     methods: {
+      async play2(file) {
+        const { data } = await axios.get(`/stream/add/${file.magnet}`)
+
+        this.activeVideo = {
+          magnet: file.magnet,
+          fileName: data[0].name
+        }
+      },
       async play(file) {
         const { data } = await axios.get(`/stream/add/${file.magnetLink}`)
 
@@ -118,6 +129,10 @@
       },
       async findMovie() {
         const response = await axios.get(`/movies/search?nm=${this.searchTerm}`);
+        this.files = response.data;
+      },
+      async getMyMovies() {
+        const response = await axios.get(`/movies`);
         this.files = response.data;
       }
     }

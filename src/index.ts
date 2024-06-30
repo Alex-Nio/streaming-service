@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 // routes
 import streamRouter from './modules/stream/stream.controller';
 import contentRouter from './modules/content/content.controller';
-import moviesRouter from './modules/movies/movies.controller';
+import moviesRouter from './modules/movies/controllers/movies.controller';
 
 import 'dotenv/config';
 
