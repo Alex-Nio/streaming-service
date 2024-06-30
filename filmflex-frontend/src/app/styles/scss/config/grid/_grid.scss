@@ -37,13 +37,7 @@ $responsive-type: 2;
 // По брейк-поинтам
 @else {
   [class*='__container'] {
-    @include container(
-      (
-        //? 1920-1660
-        ($xl, 1750, 0),
-        //? 1659-1200
-        ($lg, 1112, 0)
-      )
-    );
+    width: 100%;
+    max-width: 100vw;
   }
 }

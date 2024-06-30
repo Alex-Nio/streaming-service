@@ -9,7 +9,7 @@ $container-min-width: 320px; // Минимальная ширина страни
 // (если $responsive-type = 1, то 32px / 2 = 16px слева и справа)
 // (если $responsive-type = 2, то 16px * 2 = 32px слева и справа)
 // 0 = нет отступа
-$container-default-padding: 0px;
+$container-default-padding: 16px;
 
 //? Высота отступа контента от fixed header
 $header-height: 0;

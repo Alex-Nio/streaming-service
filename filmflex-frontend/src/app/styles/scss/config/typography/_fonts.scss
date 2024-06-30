@@ -1,7 +1,7 @@
 //? Миксин для подключения шрифтов
 //* Подробнее: https://developer.mozilla.org/ru/docs/Web/CSS/font-family
 
-$font-path: './public/assets/fonts/main' !default;
+$font-path: './public/fonts/main' !default;
 
 @mixin font-face($font-family, $weight, $style) {
   @font-face {
