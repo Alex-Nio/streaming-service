@@ -1,10 +1,10 @@
 // Cfg
 import 'dotenv/config';
 // Interfaces
-import { Movie, IMDBMovie } from '../movies.interfaces';
+import { Movie, IMDBMovie } from '../interfaces/entity.interfaces';
 // Helpers
 import { convertMovie, IMDBRequests } from '../helpers/imdb.helper';
-
+// Requests
 const { searchMovie, getMovie } = IMDBRequests();
 
 export const doSearchInImdb = async (query: string): Promise<Partial<IMDBMovie>> => {

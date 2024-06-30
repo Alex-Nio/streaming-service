@@ -1,13 +1,13 @@
 // Packages
 import axios from 'axios';
 // Consts
-import { BASE_SEARCH_URL } from '../movies.consts';
+import { BASE_SEARCH_URL } from '../constants/movies.consts';
 // Utils
 import { getPublications, getTorrents } from '../helpers/movies.helper';
 // Interfaces
-import { Movie } from '../movies.interfaces';
+import { Movie } from '../interfaces/entity.interfaces';
 // Models
-import MovieEntity from '../movies.model';
+import MovieEntity from '../models/movies.model';
 
 export const doSearch = async query => {
   const cookies = process.env.RUTRACKER_COOKIES;

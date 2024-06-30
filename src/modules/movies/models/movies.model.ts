@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Movie } from './movies.interfaces';
+import { Movie } from '../interfaces/entity.interfaces';
 
 const entity = new Schema<Movie>({
   title: {

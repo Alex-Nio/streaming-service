@@ -1,41 +1,3 @@
-import { Request } from 'express';
-
-export interface SearchRequest extends Request {
-  query: {
-    nm: string;
-    searchTerm: string;
-  };
-}
-
-export interface GetMovieFromImdbRequest extends Request {
-  params: {
-    imdbId: string;
-  };
-}
-
-export interface CreateMovieRequest extends Request {
-  body: Movie;
-}
-
-export interface UpdateMovieRequest extends Request {
-  body: Partial<Movie>;
-  params: {
-    id: string;
-  };
-}
-
-export interface DeleteMovieRequest extends Request {
-  params: {
-    id: string;
-  };
-}
-
-export interface GetMovieRequest extends Request {
-  params: {
-    id: string;
-  };
-}
-
 export interface Movie {
   title: string;
   original_title: string;
@@ -89,36 +51,6 @@ export interface IMDBMovie {
   vote_count: number;
 }
 
-interface Spokenlanguage {
-  english_name: string;
-  iso_639_1: string;
-  name: string;
-}
-
-interface Productioncountry {
-  iso_3166_1: string;
-  name: string;
-}
-
-interface Productioncompany {
-  id: number;
-  logo_path: string;
-  name: string;
-  origin_country: string;
-}
-
-interface Genre {
-  id: number;
-  name: string;
-}
-
-interface Belongstocollection {
-  id: number;
-  name: string;
-  poster_path: string;
-  backdrop_path: string;
-}
-
 export interface CrewMember {
   adult: boolean;
   gender: number;
@@ -136,18 +68,7 @@ export interface CrewMember {
   order: number;
 }
 
-export interface GetCreditsResponse {
-  id: number;
-  cast: CrewMember[];
-  crew: CrewMember[];
-}
-
-export interface GetVideosResponse {
-  id: number;
-  results: IMDBTrailer[];
-}
-
-interface IMDBTrailer {
+export interface IMDBTrailer {
   iso_639_1: string;
   iso_3166_1: string;
   name: string;
@@ -160,9 +81,7 @@ interface IMDBTrailer {
   id: string;
 }
 
-export interface SearchMoviesResponse {
-  page: number;
-  results: Partial<IMDBMovie>[];
-  total_pages: number;
-  total_results: number;
+export interface Genre {
+  id: number;
+  name: string;
 }

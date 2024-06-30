@@ -1,12 +1,10 @@
 // Router
 import { Router } from 'express';
-
 // Service
 import * as movieService from '../services/movies.service';
 import * as imdbService from '../services/imdb.service';
-
 // Interfaces
-import { CreateMovieRequest, SearchRequest, GetMovieFromImdbRequest } from '../movies.interfaces';
+import { SearchRequest, GetMovieFromImdbRequest, CreateMovieRequest } from '../interfaces/request.interfaces';
 
 const router = Router();
 

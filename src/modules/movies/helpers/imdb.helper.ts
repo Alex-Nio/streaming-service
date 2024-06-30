@@ -1,16 +1,10 @@
 import axios from 'axios';
 import { stringify } from 'querystring';
 // Consts
-import { IMDB_SEARCH_URL } from '../movies.consts';
+import { IMDB_SEARCH_URL } from '../constants/movies.consts';
 // Interfaces
-import {
-  Movie,
-  IMDBMovie,
-  SearchMoviesResponse,
-  GetCreditsResponse,
-  GetVideosResponse,
-  CrewMember
-} from '../movies.interfaces';
+import { IMDBMovie, CrewMember, Movie } from '../interfaces/entity.interfaces';
+import { GetCreditsResponse, SearchMoviesResponse, GetVideosResponse } from '../interfaces/response.interfaces';
 
 export const IMDBRequests = () => {
   const params = stringify({
@@ -29,9 +23,9 @@ export const IMDBRequests = () => {
   };
 };
 
-const findCrewMember = (crew: CrewMember[], memberJob: string) => crew.find(({ job }) => job === memberJob).name || '';
-
 const { getMovieCredits, getVideos } = IMDBRequests();
+
+const findCrewMember = (crew: CrewMember[], memberJob: string) => crew.find(({ job }) => job === memberJob).name || '';
 
 export const movieCredits = async (imdbId: number) => {
   try {
