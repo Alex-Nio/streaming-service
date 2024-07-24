@@ -1,53 +1,55 @@
-<script lang="ts" setup>
-  import { ref, computed, onMounted } from "vue";
-  import axios from "axios";
-  import Section from "@/components/layout/Section.vue";
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import axios from 'axios';
+import Section from '@/components/layout/Section.vue';
 
-  const searchQuery = ref("");
-  const activeVideo = ref<Partial<VideoFile>>({});
-  const files = ref<Partial<VideoFile>[]>([]);
-  const HOST = "http://localhost:8080";
+const searchQuery = ref('');
+const activeVideo = ref<Partial<VideoFile>>({});
+const files = ref<Partial<VideoFile>[]>([]);
+const HOST = 'http://localhost:8080';
 
-  interface VideoFile {
-    fileName: string;
-    magnetLink: string;
-    magnet: string;
-    author: string;
-    title: string;
-    category: string;
-    size: string;
-    quality: string;
-    format: string;
-    audio: string;
-    seeds: string;
-    peers: string;
-  }
+interface VideoFile {
+  fileName: string;
+  name: string;
+  length: number;
+  magnetLink: string;
+  magnet: string;
+  author: string;
+  title: string;
+  category: string;
+  size: string;
+  quality: string;
+  format: string;
+  audio: string;
+  seeds: string;
+  peers: string;
+}
 
-  const getMyMovies = async () => {
-    const response = await axios.get(`${HOST}/movies`);
-    files.value = response.data;
-  };
+const findMovie = async () => {
+  console.log(searchQuery.value);
+  const response = await axios.get(
+    `${HOST}/movies/search?nm=${searchQuery.value}`
+  );
+  files.value = response.data;
+};
 
-  const findMovie = async () => {
-    const response = await axios.get(`${HOST}/movies/search?nm=${searchQuery.value}`);
-    files.value = response.data;
-  };
-
-  const play = async (file: Partial<VideoFile>) => {
+const getFileData = async (file: Partial<VideoFile>) => {
+  try {
     const { data } = await axios.get(`${HOST}/stream/add/${file.magnetLink}`);
-    activeVideo.value = {
-      magnetLink: file.magnetLink,
-      fileName: data[0].name,
-    };
-  };
+    activeVideo.value = { fileName: data[0].name, magnetLink: file.magnetLink };
+  } catch (error) {
+    console.error('Error fetching stream add:', error);
+    return;
+  }
+};
 
-  const videoUrl = computed(() => {
-    return activeVideo.value.fileName
-      ? `${HOST}/stream/${activeVideo.value.magnetLink}/${activeVideo.value.fileName}`
-      : "";
-  });
+const videoUrl = computed(() => {
+  console.log('computed done, filename: ', activeVideo.value.fileName);
 
-  onMounted(getMyMovies);
+  return activeVideo.value.fileName
+    ? `${HOST}/stream/video/${activeVideo.value.magnetLink}/${activeVideo.value.fileName}`
+    : '';
+});
 </script>
 
 <template>
@@ -55,10 +57,19 @@
     <h1>Movie Page</h1>
 
     <div>
-      <video :src="videoUrl" controls autoplay></video>
+      <div class="video">
+        <video :src="videoUrl" controls autoplay></video>
+      </div>
       <hr />
-      <input v-model="searchQuery" placeholder="Поиск фильма" type="search" />
-      <button @click="findMovie">Найти</button>
+      <div class="controls">
+        <input
+          v-model="searchQuery"
+          @keyup.enter="findMovie"
+          type="search"
+          placeholder="Поиск фильма"
+        />
+        <button @click="findMovie">Найти</button>
+      </div>
       <hr />
       <ul>
         <li v-for="file in files" :key="file.magnet">
@@ -99,7 +110,7 @@
               <strong>Пиры:</strong>
               {{ file.peers }}
             </span>
-            <button @click="play(file)">Воспроизвести</button>
+            <button @click="getFileData(file)">добавить данные</button>
           </div>
           <div v-else class="file-details">Ничего не найдено</div>
         </li>
@@ -108,4 +119,46 @@
   </Section>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.video {
+  padding: 40px;
+}
+
+.controls {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+
+  input {
+    width: 420px;
+    padding: 12px;
+    @include nunito-b18;
+  }
+}
+
+ul {
+  text-decoration: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.file-details {
+  padding: 12px;
+  border: 2px solid teal;
+  margin: 20px 0;
+}
+
+span {
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+}
+
+button {
+  padding: 12px;
+  background-color: $additional;
+  color: $white;
+  @include nunito-b18;
+}
+</style>

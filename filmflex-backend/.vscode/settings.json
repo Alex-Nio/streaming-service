@@ -3,12 +3,16 @@
     "торрента",
     "торрентов",
     "Belongstocollection",
+    "FLAC",
     "Imdb",
     "leechmed",
     "Productioncompany",
     "Productioncountry",
     "RUTRACKER",
     "seedmed",
-    "Spokenlanguage"
+    "Spokenlanguage",
+    "Theora",
+    "Vorbis",
+    "webm"
   ]
 }

@@ -1,7 +1,8 @@
 import { Router, Response, Request, NextFunction } from 'express';
 import WebTorrent, { Torrent } from 'webtorrent';
-// Interfaces
 import { ErrorWithStatus, StreamRequest } from './stream.interfaces';
+import chalk from 'chalk-cjs'; // добавляем chalk
+import * as mime from 'mime-types';
 
 const router = Router();
 const client = new WebTorrent();
@@ -21,7 +22,7 @@ let state: State = {
 let error: string | undefined;
 
 client.on('error', (err: Error) => {
-  console.error('err', err.message);
+  console.error(chalk.red('WebTorrent client error:'), err.message); // раскрашиваем ошибку красным
   error = err.message;
 });
 
@@ -42,7 +43,9 @@ router.get('/add/:magnetLink', (req: Request, res: Response) => {
       length
     }));
 
-    console.log('DOWNLOAD PATH: ', torrent.path);
+    console.log(chalk.bgMagenta('==================================='));
+    console.log(chalk.green('DOWNLOAD PATH:'), chalk.green(torrent.path));
+    console.log(chalk.bgMagenta('==================================='));
 
     res.status(200).send(files);
   });
@@ -58,12 +61,18 @@ router.get('/stats', (_req: Request, res: Response) => {
   res.status(200).send(state);
 });
 
-// stream
-router.get('/:magnetLink/:fileName', (req: StreamRequest, res: Response, next: NextFunction) => {
+router.get('/video/:magnetLink/:fileName', (req: StreamRequest, res: Response, next: NextFunction) => {
   const {
     params: { magnetLink, fileName },
     headers: { range }
   } = req;
+
+  console.log(chalk.bgMagenta('==================================='));
+  console.log(chalk.bgMagenta('==================================='));
+
+  console.log(chalk.bgMagenta('==================================='));
+  console.log(chalk.yellow('RANGE:'), range); // раскрашиваем диапазон жёлтым
+  console.log(chalk.bgMagenta('==================================='));
 
   if (!range) {
     const err = new Error('Range is not defined, please make request from HTML5 Player') as ErrorWithStatus;
@@ -88,21 +97,70 @@ router.get('/:magnetLink/:fileName', (req: StreamRequest, res: Response, next: N
 
   const chunkSize = end - start + 1;
 
+  // Определение Content-Type на основе расширения файла
+  const contentType = mime.contentType(fileName) || 'application/octet-stream';
+
+  console.log(chalk.magenta('==================================='));
+  console.log(chalk.yellow('CONTENT TYPE:'), contentType);
+  console.log(chalk.magenta('==================================='));
+
   const headers = {
     'Content-Range': `bytes ${start}-${end}/${fileSize}`,
     'Accept-Ranges': 'bytes',
     'Content-Length': chunkSize,
-    'Content-Type': 'video/mp4'
+    'Content-Type': contentType
   };
+
+  // Определение текущего прогресса загрузки в MB
+  const loadedMB = (end - start + 1) / (1024 * 1024); // преобразование из байтов в MB
+  const fileSizeMB = fileSize / (1024 * 1024); // преобразование из байтов в MB
+  const remainingMB = (fileSize - (end - start + 1)) / (1024 * 1024); // преобразование из байтов в MB
+  const chunkSizeMB = chunkSize / (1024 * 1024); // преобразование из байтов в MB
+
+  console.log(chalk.bgBlue('==================================='));
+  console.log(chalk.cyan('FILE SIZE:'), fileSizeMB.toFixed(2), 'MB');
+  console.log(chalk.cyan('LOADED:'), loadedMB.toFixed(2), 'MB');
+  console.log(chalk.cyan('CHUNK SIZE:'), chunkSizeMB.toFixed(2), 'MB');
+  console.log(chalk.cyan('REMAINING:'), remainingMB.toFixed(2), 'MB');
+  console.log(chalk.bgBlue('==================================='));
+  console.log(chalk.cyan('START:'), start, ' bytes');
+  console.log(chalk.cyan('END:'), end, ' bytes');
+  console.log(chalk.cyan('CHUNK SIZE:'), chunkSize, ' bytes');
+  console.log(chalk.cyan('REMAINING:'), fileSize, ' bytes');
+  console.log(chalk.bgBlue('==================================='));
 
   res.writeHead(206, headers);
 
   const streamPositions = { start, end };
-  const stream = file.createReadStream(streamPositions);
+  const fileStream = file.createReadStream(streamPositions);
 
-  stream.pipe(res);
+  fileStream.on('error', err => {
+    console.log(chalk.bgBlue('==================================='));
+    console.error(chalk.red('File stream error:'), err);
+    console.log(chalk.bgBlue('==================================='));
+    next(err);
+  });
 
-  stream.on('error', err => next(err));
+  fileStream.pipe(res);
+
+  // Обработка закрытия соединения
+  res.socket.on('close', () => {
+    console.log(chalk.bgBlue('==================================='));
+    console.log(chalk.gray('Connection closed by client'));
+    console.log(chalk.bgBlue('==================================='));
+  });
+
+  fileStream.on('end', () => {
+    console.log(chalk.bgBlue('==================================='));
+    console.log(chalk.gray('All the data in the file has been read'));
+    console.log(chalk.bgBlue('==================================='));
+  });
+
+  fileStream.on('close', () => {
+    console.log(chalk.bgBlue('==================================='));
+    console.log(chalk.gray('Stream has been destroyed and file has been closed'));
+    console.log(chalk.bgBlue('==================================='));
+  });
 });
 
 export default router;

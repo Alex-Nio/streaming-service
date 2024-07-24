@@ -38,7 +38,7 @@
 
 <body>
   <div id="app">
-    <video :src="videoUrl" controls autoplay></video>
+    <video :src="videoUrl" controls autoplay muted="false"></video>
     <hr />
     <input v-model="searchTerm" placeholder="Поиск фильма" type="search" />
     <button @click="findMovie">Найти</button>
